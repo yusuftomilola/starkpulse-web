@@ -134,14 +134,13 @@ export class NewsService {
     }
 
     // Create new article
-    const publishedAt = articleDto.publishedAt
-      ? new Date(articleDto.publishedAt)
-      : new Date();
     const article = this.newsRepository.create({
       title: articleDto.title,
       url: articleDto.url,
       source: articleDto.source,
-      publishedAt,
+      publishedAt: articleDto.publishedAt
+        ? new Date(articleDto.publishedAt)
+        : new Date(),
       sentimentScore: null, // Will be populated by sentiment service
     });
 
