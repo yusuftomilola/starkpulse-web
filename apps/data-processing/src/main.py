@@ -19,6 +19,7 @@ from src.validators import validate_news_article, validate_onchain_metric
 from src.analytics.market_analyzer import MarketAnalyzer, MarketData
 from src.analytics.market_analyzer import get_explanation
 from src.anomaly_detector import AnomalyDetector
+from src.alert_notifier import notifier
 from scheduler import AnalyticsScheduler
 
 from src.utils.logger import setup_logger, CorrelationIdFilter
@@ -205,6 +206,10 @@ def run_data_pipeline():
                     f"z_score={result.z_score:.2f}, "
                     f"severity={result.severity_score:.2f}"
                 )
+        
+        # Trigger alerts for detected anomalies
+        if anomalies_found:
+            notifier.notify_batch([volume_anomaly, sentiment_anomaly])
 
         window_stats = anomaly_detector.get_window_stats()
         print(f"Detector window: {window_stats['data_points_count']} data points")
