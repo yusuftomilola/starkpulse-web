@@ -123,11 +123,11 @@ fn test_yield_investment_and_withdrawal() {
     assert_eq!(token_client.balance(&client.address), 200_000);
 
     // Approve milestone so we can withdraw
-    client.approve_milestone(&admin, &project_id);
+    client.approve_milestone(&admin, &project_id, &0);
 
     // Withdraw more than local balance (requires auto-divest)
     // Local is 200_000, we want 400_000. It should divest 200_000.
-    client.withdraw(&project_id, &400_000);
+    client.withdraw(&project_id, &0, &400_000);
 
     // Verify final balances
     assert_eq!(client.get_balance(&project_id), 100_000);
