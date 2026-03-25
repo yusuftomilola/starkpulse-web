@@ -12,4 +12,11 @@ pub enum ContributorError {
     InvalidGitHubHandle = 6,
     ReputationOverflow = 7,
     GitHubHandleTaken = 8,
+    InvalidMultisigConfig = 9,
+    TooManySigners = 10,
+    ProposalNotFound = 11,
+    InvalidProposalStatus = 12,
+    ProposalExpired = 13,
+    AlreadySigned = 14,
+    BelowThreshold = 15,
 }
