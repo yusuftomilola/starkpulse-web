@@ -60,7 +60,9 @@ export class PortfolioService {
       // Calculate USD values for each asset
       assetBalances = await Promise.all(
         stellarBalances.map(async (balance) => {
-          const price = await this.priceService.getCurrentPrice(balance.assetCode);
+          const price = await this.priceService.getCurrentPrice(
+            balance.assetCode,
+          );
           const valueUsd = parseFloat(balance.balance) * price;
 
           totalValueUsd += valueUsd;
@@ -71,7 +73,7 @@ export class PortfolioService {
             amount: balance.balance,
             valueUsd,
           };
-        })
+        }),
       );
     } catch {
       this.logger.warn(
@@ -85,7 +87,9 @@ export class PortfolioService {
 
       assetBalances = await Promise.all(
         portfolioAssets.map(async (asset) => {
-          const price = await this.priceService.getCurrentPrice(asset.assetCode);
+          const price = await this.priceService.getCurrentPrice(
+            asset.assetCode,
+          );
           const valueUsd = parseFloat(asset.amount) * price;
 
           totalValueUsd += valueUsd;
@@ -96,7 +100,7 @@ export class PortfolioService {
             amount: asset.amount,
             valueUsd,
           };
-        })
+        }),
       );
     }
 

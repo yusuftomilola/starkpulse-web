@@ -53,7 +53,7 @@ export class PriceService implements OnModuleInit {
    * Get the current USD price of an asset.
    * Currently using mock prices; to be replaced with a real price feed (e.g., CoinGecko).
    */
-  async getCurrentPrice(assetCode: string): Promise<number> {
+  getCurrentPrice(assetCode: string): Promise<number> {
     const mockPrices: Record<string, number> = {
       XLM: 0.12,
       USDC: 1.0,
@@ -61,6 +61,6 @@ export class PriceService implements OnModuleInit {
       ETH: 2500.0,
     };
 
-    return mockPrices[assetCode] || 0;
+    return Promise.resolve(mockPrices[assetCode] || 0);
   }
 }

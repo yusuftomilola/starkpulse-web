@@ -32,10 +32,14 @@ import { TestController } from './test/test.controller';
 
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        ...configService.get('database'),
-        autoLoadEntities: true,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const databaseConfig =
+          configService.get<Record<string, unknown>>('database');
+        return {
+          ...databaseConfig,
+          autoLoadEntities: true,
+        };
+      },
     }),
 
     ScheduleModule.forRoot(),

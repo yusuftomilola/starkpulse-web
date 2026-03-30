@@ -80,7 +80,9 @@ export class StellarBalanceService {
     try {
       price = await this.priceService.getCurrentPrice(assetCode);
     } catch (error) {
-      this.logger.warn(`Failed to fetch price for ${assetCode}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      this.logger.warn(
+        `Failed to fetch price for ${assetCode}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
     }
     const numAmount = parseFloat(amount);
     return numAmount * price;
