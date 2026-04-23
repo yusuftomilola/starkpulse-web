@@ -8,8 +8,11 @@ export const transactionApi = {
     if (cursor) params.append('cursor', cursor);
     
     const url = `/transactions/history${params.toString() ? `?${params.toString()}` : ''}`;
-    const response = await apiClient.get(url);
-    return response.data;
+    const response = await apiClient.get<TransactionHistoryResponse>(url);
+    if (response.success && response.data) {
+      return response.data;
+    }
+    throw new Error(response.error?.message || 'Failed to fetch transaction history');
   },
 
   getForAccount: async (publicKey: string, limit?: number, cursor?: string): Promise<TransactionHistoryResponse> => {
@@ -18,7 +21,10 @@ export const transactionApi = {
     if (cursor) params.append('cursor', cursor);
     
     const url = `/transactions/account/${publicKey}${params.toString() ? `?${params.toString()}` : ''}`;
-    const response = await apiClient.get(url);
-    return response.data;
+    const response = await apiClient.get<TransactionHistoryResponse>(url);
+    if (response.success && response.data) {
+      return response.data;
+    }
+    throw new Error(response.error?.message || 'Failed to fetch account transactions');
   },
 };

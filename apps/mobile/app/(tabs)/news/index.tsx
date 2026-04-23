@@ -6,17 +6,13 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   SafeAreaView,
+  View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
-import { apiClient } from '../../../lib/api-client';
-import { useTheme } from '../../../contexts/ThemeContext';
-
-interface Article {
-  id: string;
-  title: string;
-  source: string;
-  publishedAt: string;
-}
+import { useRouter, Stack } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { apiClient } from '@/lib/api-client';
+import { useTheme } from '@/contexts/ThemeContext';
+import { Article } from '@/lib/types/news';
 
 export default function NewsScreen() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -74,6 +70,18 @@ export default function NewsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => router.push('/news/saved')}
+              style={{ marginRight: 16 }}
+            >
+              <Ionicons name="bookmark-outline" size={24} color={colors.text} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       <FlatList
         data={articles}
         keyExtractor={(item) => item.id}

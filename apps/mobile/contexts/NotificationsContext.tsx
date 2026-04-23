@@ -26,8 +26,8 @@ type NotificationsContextType = {
   markAllAsRead: () => Promise<void>;
   registerForPushNotificationsAsync: () => Promise<string | null>;
   handleNotification: (notification: Notifications.Notification) => void;
-  notificationListener: Subscription;
-  responseListener: Subscription;
+  notificationListener: Notifications.Subscription;
+  responseListener: Notifications.Subscription;
 };
 
 const NotificationsContext = createContext<NotificationsContextType | undefined>(undefined);
@@ -90,7 +90,7 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
   const handleNotification = useCallback((notification: Notifications.Notification) => {
     // When a notification is received while the app is in foreground
     // We'll add it to our notifications list
-    const { title, body, data } = notification;
+    const { title, body, data } = notification.request.content;
     
     // Create a new notification object
     const newNotification: Notification = {
@@ -151,19 +151,19 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
     // Listen for notification responses (when user taps on notification)
     responseListenerRef.current = Notifications.addNotificationResponseReceivedListener((response) => {
       const { notification, actionIdentifier } = response;
-      const { data } = notification.content;
+      const { data } = notification.request.content;
       
       // Handle deep linking based on notification data
       if (data) {
         // Example: if notification data contains a screen to navigate to
-        if (data.screen) {
-          router.push(data.screen);
+        if (typeof data.screen === 'string') {
+          router.push(data.screen as any);
         } else if (data.type === 'alert' && data.alertId) {
           // Navigate to alert details screen
-          router.push(`/alerts/${data.alertId}`);
+          router.push(`/alerts/${data.alertId}` as any);
         } else if (data.type === 'transaction' && data.transactionId) {
           // Navigate to transaction details screen
-          router.push(`/transactions/${data.transactionId}`);
+          router.push(`/transactions/${data.transactionId}` as any);
         }
         // Add more deep link handling as needed
       }

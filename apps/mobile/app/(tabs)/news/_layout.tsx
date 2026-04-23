@@ -18,6 +18,10 @@ export default function NewsLayout() {
         name="[id]"
         options={{ title: 'Article' }}
       />
+      <Stack.Screen
+        name="saved"
+        options={{ title: 'Saved News' }}
+      />
     </Stack>
   );
 }
