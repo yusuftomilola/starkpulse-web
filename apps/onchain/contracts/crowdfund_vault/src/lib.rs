@@ -1035,6 +1035,16 @@ impl CrowdfundVaultContract {
             return Err(CrowdfundError::NotInitialized);
         }
 
+        // Check Emergency Pause State (single read)
+        let is_paused: bool = env
+            .storage()
+            .instance()
+            .get(&DataKey::Paused)
+            .unwrap_or(false);
+        if is_paused {
+            return Err(CrowdfundError::ContractPaused);
+        }
+
         // Get project
         let project: ProjectData = env
             .storage()

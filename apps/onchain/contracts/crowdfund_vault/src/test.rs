@@ -1301,6 +1301,89 @@ fn test_deposit_pause_unpause() {
     assert_eq!(project.total_deposited, deposit_amount);
 }
 
+#[test]
+#[should_panic(expected = "HostError: Error(Contract, #11)")]
+fn test_distribute_match_pause() {
+    let env = Env::default();
+    env.mock_all_auths();
+
+    let (client, admin, owner, user, token_client) = setup_test(&env);
+
+    // Initialize contract
+    client.initialize(&admin);
+
+    // Create project
+    let project_id = client.create_project(
+        &owner,
+        &symbol_short!("TestProj"),
+        &1_000_000,
+        &token_client.address,
+    );
+
+    // Deposit funds
+    let contribution: i128 = 1_000_000;
+    client.deposit(&user, &project_id, &contribution);
+
+    // Fund matching pool
+    let pool_amount: i128 = 10_000_000;
+    let (_, token_admin_client) = create_token_contract(&env, &admin);
+    token_admin_client.mint(&admin, &pool_amount);
+    client.fund_matching_pool(&admin, &token_client.address, &pool_amount);
+
+    // Pause contract
+    let _ = client.pause(&admin);
+
+    // Try to distribute match - should fail
+    client.distribute_match(&project_id);
+}
+
+#[test]
+fn test_distribute_match_pause_unpause() {
+    let env = Env::default();
+    env.mock_all_auths();
+
+    let (client, admin, owner, user, token_client) = setup_test(&env);
+
+    // Initialize contract
+    client.initialize(&admin);
+
+    // Create project
+    let project_id = client.create_project(
+        &owner,
+        &symbol_short!("TestProj"),
+        &1_000_000,
+        &token_client.address,
+    );
+
+    // Deposit funds
+    let contribution: i128 = 1_000_000;
+    client.deposit(&user, &project_id, &contribution);
+
+    // Fund matching pool
+    let pool_amount: i128 = 10_000_000;
+    let (_, token_admin_client) = create_token_contract(&env, &admin);
+    token_admin_client.mint(&admin, &pool_amount);
+    client.fund_matching_pool(&admin, &token_client.address, &pool_amount);
+
+    // Pause contract
+    let _ = client.pause(&admin);
+
+    let is_pause = client.require_not_paused();
+    assert!(is_pause);
+
+    // Unpause contract
+    let _ = client.unpause(&admin);
+
+    let is_pause = client.require_not_paused();
+    assert!(!is_pause);
+
+    // Now distribute match should work
+    let distributed = client.distribute_match(&project_id);
+
+    // Verify match was distributed
+    assert!(distributed > 0);
+}
+
 // ---------------------------------------------------------------------------
 // Upgradeability tests
 // ---------------------------------------------------------------------------
