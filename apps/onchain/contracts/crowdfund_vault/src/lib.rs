@@ -751,9 +751,10 @@ impl CrowdfundVaultContract {
         env.storage()
             .persistent()
             .set(&DataKey::MilestoneApproved(project_id, milestone_id), &true);
-        env.storage()
-            .persistent()
-            .set(&DataKey::MilestoneDisputed(project_id, milestone_id), &false);
+        env.storage().persistent().set(
+            &DataKey::MilestoneDisputed(project_id, milestone_id),
+            &false,
+        );
 
         // Emit milestone approval event
         events::MilestoneApprovedEvent {
@@ -932,9 +933,10 @@ impl CrowdfundVaultContract {
             env.storage()
                 .persistent()
                 .set(&DataKey::MilestoneApproved(project_id, milestone_id), &true);
-            env.storage()
-                .persistent()
-                .set(&DataKey::MilestoneDisputed(project_id, milestone_id), &false);
+            env.storage().persistent().set(
+                &DataKey::MilestoneDisputed(project_id, milestone_id),
+                &false,
+            );
             events::MilestoneApprovedByVoteEvent {
                 project_id,
                 milestone_id,
@@ -1155,9 +1157,10 @@ impl CrowdfundVaultContract {
             reason,
         };
 
-        env.storage()
-            .persistent()
-            .set(&DataKey::MilestoneDispute(project_id, milestone_id), &dispute);
+        env.storage().persistent().set(
+            &DataKey::MilestoneDispute(project_id, milestone_id),
+            &dispute,
+        );
         env.storage()
             .persistent()
             .set(&DataKey::MilestoneDisputed(project_id, milestone_id), &true);
@@ -1188,16 +1191,17 @@ impl CrowdfundVaultContract {
             .get::<_, MilestoneDispute>(&DataKey::MilestoneDispute(project_id, milestone_id))
             .ok_or(CrowdfundError::MilestoneNotDisputed)?;
 
-        env.storage()
-            .persistent()
-            .set(&DataKey::MilestoneDisputed(project_id, milestone_id), &false);
+        env.storage().persistent().set(
+            &DataKey::MilestoneDisputed(project_id, milestone_id),
+            &false,
+        );
         env.storage()
             .persistent()
             .remove(&DataKey::MilestoneDispute(project_id, milestone_id));
-
-        env.storage()
-            .persistent()
-            .set(&DataKey::MilestoneApproved(project_id, milestone_id), &upheld_completion);
+        env.storage().persistent().set(
+            &DataKey::MilestoneApproved(project_id, milestone_id),
+            &upheld_completion,
+        );
 
         events::MilestoneDisputeResolvedEvent {
             admin,
