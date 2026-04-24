@@ -22,6 +22,7 @@ import { NotificationModule } from './notification/notification.module';
 import { QueueModule } from './queue/queue.module';
 import { StellarSyncModule } from './stellar-sync/stellar-sync.module';
 import { ExchangeRatesModule } from './exchange-rates/exchange-rates.module';
+import { WatchlistModule } from './watchlist/watchlist.module';
 
 import databaseConfig from './database/database.config';
 import stellarConfig from './stellar/config/stellar.config';
@@ -97,6 +98,7 @@ import { GrantsModule } from './grants/grants.module';
     StellarSyncModule,
     ExchangeRatesModule,
     GrantsModule,
+    WatchlistModule,
   ],
   controllers: [AppController, TestController, TestExceptionController],
   providers: [
